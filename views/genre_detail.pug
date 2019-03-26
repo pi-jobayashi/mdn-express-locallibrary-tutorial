@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  h1 Genre: #{genre.name}
+
+  div(style='margin-left:20px;margin-top:20px;')
+
+    h4 Books
+
+    dl
+      each book in books_in_genre
+        dt
+          a(href=book.url) #{book.title}
+        dd #{book.summary}
+        br
+
+      else
+        p This genre has no listings yet.
+        p Create a new book with this genre  
+          a(href="../book/create") here
+
+    hr
+    p
+      a(href=genre.url+"/delete") Delete This Great Genre
+    p
+      a(href=genre.url+"/update") Update Dis Hea Genre

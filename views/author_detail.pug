@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  h1 #{title}:
+  h2 #{author.name}
+  //- p #{author.date_of_birth_formatted} - #{author.date_of_death_formatted}
+  p #{author.lifespan_formatted}
+
+  br
+
+  div(style='margin-left:20px;margin-top:20px;')
+    h4 Book by #{author.name}
+
+    br
+    
+    dl
+      each book in books_by_author
+        dt
+          a(href=book.url) #{book.title}
+        dd #{book.summary}
+        br
+      
+      else
+        p There are no books by this author. Apparently #{author.name} is not a very good author.
+
+  hr
+  p
+    a(href=author.url+"/delete") Delete This Author
+  p
+    a(href=author.url+"/update") Update Dis Hea Author

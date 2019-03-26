@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  h1 #{title}:
+  h2 #{genre.name}
+
+  if genre_books.length
+
+    p #[strong To delete this genre, remove these books within the library database. ]
+
+    div(style="margin-top:20px;margin-left:20px;")
+
+      h4 Books in this Genre
+
+      dl
+      each book in genre_books
+        dt
+          a(href=book.url) #{book.title}
+      
+  else
+    p Do you really want to delete this Genre?
+
+    form(method="POST" action="")
+      div.form-group
+        input#genreid.form-control(type="hidden" name="genreid" required="true" value=genre._id)
+
+      button.btn.btn-danger(type="submit") Make it disappear
+

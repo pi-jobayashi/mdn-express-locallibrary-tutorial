@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1 #{title}: #{book_instance._id}
+  br
+  //- p #[strong Title:] 
+  //-   a(href=book_instance.book.url) #{book_instance.book.title}
+  p #[strong Imprint:] #{book_instance.imprint}
+  //- br
+  p #[strong Status:] #{book_instance.status}
+  p #[strong Status:] #{book_instance.due_back_formatted}
+  
+  form(method="POST" action="")
+    div.form-group
+      input#bookinstanceid.form-control(type="hidden" name="bookinstanceid" required="true" value=book_instance._id)
+
+    button.btn.btn-danger(type="submit") Make it gone

@@ -30,11 +30,17 @@ const app = express();
 // db.on('error', console.error.bind(console, "MongoDB connection error:"));
 
 // setup mongoose via MERN Stack Front-to-Back class 
-const db = require("./config/keys").mongoURI;
+// const db = require("./config/keys").mongoURI;
+
+// setup mongoose via MDN-Express-LocalLibrary-Tutorial database steps
+// https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/deployment
+const dev_db_url = "mongodb://jon:supersecretpassword123@ds161285.mlab.com:61285/local_library";
+const mongoDB = process.env.MONGODB_URI || dev_db_url;
 
 // Connect to mLab w/ JS Promise
 mongoose
-  .connect(db, { useNewUrlParser: true })
+  // .connect(db, { useNewUrlParser: true }) // MERN FTB method
+  .connect(mongoDB, { useNewUrlParser: true }) // MDN-Express-LocalLibrary-Tutorial method
   // .then(() => console.log("MongoDB Connected!"))
   .then(() => expressDebug("MongoDB Connected!"))
   .catch(err => {

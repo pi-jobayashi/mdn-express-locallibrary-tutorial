@@ -6,10 +6,11 @@ const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
 const mongoose = require('mongoose');
 
-const expressDebug = require('debug')('expressDebug');
+
+const appDebug = require('debug')('appDebug');
 const name = "myApp";
 
-expressDebug("booting o%", name);
+appDebug("booting o%", name);
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -20,6 +21,83 @@ const helmet = require('helmet');
 
 // Create the Express application obj
 const app = express();
+
+
+
+// tyring to restructure app.js to eliminate need for ./bin/www
+const http = require('http');
+/**
+ * Create HTTP server.
+ */
+const server = http.createServer(app);
+
+/**
+ * Get port from environment and store in Express.
+ */
+const port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  appDebug('Listening on ' + bind);
+}
+
 
 // set up mongoose and mongoDB connection
 // var mongoose = require('mongoose');
@@ -32,20 +110,19 @@ const app = express();
 // setup mongoose via MERN Stack Front-to-Back class 
 // const db = require("./config/keys").mongoURI;
 
-// setup mongoose via MDN-Express-LocalLibrary-Tutorial database steps
-// https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/deployment
+// setup mongoDB via MDN-Express-LocalLibrary-Tutorial
 const dev_db_url = "mongodb://jon:supersecretpassword123@ds161285.mlab.com:61285/local_library";
 const mongoDB = process.env.MONGODB_URI || dev_db_url;
 
 // Connect to mLab w/ JS Promise
 mongoose
-  // .connect(db, { useNewUrlParser: true }) // MERN FTB method
-  .connect(mongoDB, { useNewUrlParser: true }) // MDN-Express-LocalLibrary-Tutorial method
+  // .connect(db, { useNewUrlParser: true }) // From MERN Stack Front-to-Back class
+  .connect(mongoDB, { useNewUrlParser: true }) // From MDN-Express-LocalLibrary-Tutorial
   // .then(() => console.log("MongoDB Connected!"))
-  .then(() => expressDebug("MongoDB Connected!"))
+  .then(() => appDebug("MongoDB Connected!"))
   .catch(err => {
     // console.log(err);
-    expressDebug("mongoose error: " + err);
+    appDebug("mongoose error: " + err);
   });
 
 
@@ -93,4 +170,6 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+// app.
+
+//   module.exports = app;
